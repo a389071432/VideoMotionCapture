@@ -18,7 +18,7 @@ from videopose3d.model import TemporalModel
 app=Flask(__name__)
 
 
-#输入：原始视频
+#input:video
 #输出：numpy, shape=[batch,3,608,608]
 def preProcessForYOLO(video):
     video.save('example.gif')
@@ -26,7 +26,7 @@ def preProcessForYOLO(video):
     imgs=[]
     orig_imgs=[]
     im_dim_list=[]
-    #读取视频每一帧并处理
+
     tag, img = cap.read()
     while tag:
         orig_img=img.copy()
@@ -49,10 +49,10 @@ def preProcessForYOLO(video):
     return np.stack(imgs, axis=0),orig_imgs,im_dim_list
 
 
-#对YOLO返回结果进行后处理
-#输入0：prediction [batch,22743]
-#输入1：ori_imgs []
-#输出: ori_imgs,boxes,inps [batch,3,256,192]
+#Post processing for the outputs of YOLO
+#input0：prediction [batch,22743]
+#input1：ori_imgs []
+#output: ori_imgs,boxes,inps [batch,3,256,192]
 def preProcessForFastPose(prediction,orig_imgs,im_dim_list):
     new_orig_imgs=[]
     all_boxes=[]
@@ -120,7 +120,7 @@ def preProcessForFastPose(prediction,orig_imgs,im_dim_list):
         new_pt2.append(pt2)
     return np.concatenate(final_inps,axis=0),new_boxes,new_scores,new_pt1,new_pt2
 
-#输出：[total_frames,17,2]
+#output：[total_frames,17,2]
 def preProcessForVideoPose3D(hms,all_boxes,all_scores,all_pt1,all_pt2,orig_imgs):
     final_result=[]
     for i in range(hms.shape[0]):
