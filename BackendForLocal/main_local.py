@@ -19,7 +19,7 @@ app=Flask(__name__)
 
 
 #input:video
-#输出：numpy, shape=[batch,3,608,608]
+#output：numpy, shape=[batch,3,608,608]
 def preProcessForYOLO(video):
     video.save('example.gif')
     cap=cv2.VideoCapture('example.gif')
