@@ -1,0 +1,17 @@
+name: "FastPose"
+platform: "tensorrt_plan"
+max_batch_size : 16
+input [
+  {
+    name: "input"
+    data_type: TYPE_FP32
+    dims: [3, 320, 256]
+  }
+]
+output [
+  {
+    name: "output"
+    data_type: TYPE_FP32
+    dims: [33, 80, 64]
+  }
+]
