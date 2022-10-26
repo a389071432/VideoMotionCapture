@@ -109,3 +109,8 @@ If you want to run the project as a cloud service using Triton Inference Server,
   <p align="center">
    <img src="/demo/UI_visual.png" /> 
   </p>
+## Credits
+About the three deep learning models used in the backend:
+- yolov3-spp+FastPose. Please refer to https://github.com/MVIG-SJTU/AlphaPose
+- VideoPose3D. Please refer to https://github.com/facebookresearch/VideoPose3D
+
