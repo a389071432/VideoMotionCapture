@@ -46,7 +46,7 @@ def requestGenerator(batched_data):
     ]
     yield inputs, outputs
 
-#送入videopose3d进行三维关节点检测,待修改
+#Send requests to Triton for VideoPose3D inference (3D pose estimation)
 def videopose3d(joints2d):
     try:
         # Create gRPC client for communicating with the server
@@ -104,15 +104,15 @@ def videopose3d(joints2d):
         joints3d.append(response.as_numpy('output'))
     return np.stack(joints3d, axis=0)
 
-#输入：原始视频
-#输出：numpy, shape=[batch,3,608,608]
+# intput:video
+# output：numpy, shape=[batch,3,608,608]
 def preProcessForYOLO(video):
     video.save('example.gif')
     cap=cv2.VideoCapture('example.gif')
     imgs=[]
     orig_imgs=[]
     im_dim_list=[]
-    #读取视频每一帧并处理
+
     tag, img = cap.read()
     while tag:
         orig_img=img.copy()
@@ -134,9 +134,9 @@ def preProcessForYOLO(video):
     im_dim_list = torch.FloatTensor(im_dim_list).repeat(1, 2)
     return np.stack(imgs, axis=0),orig_imgs,im_dim_list
 
-#YOLO检测
-#输入：[batch,3,608,608]
-#输出：[batch,22743,85]
+# Send requests to Triton for YOLO inference (human body detection)
+# input：[batch,3,608,608]
+# output：[batch,22743,85]
 def YOLO(imgs):
     try:
         # Create gRPC client for communicating with the server
@@ -155,7 +155,6 @@ def YOLO(imgs):
     sent_count = 0
     max_batch_size=1
 
-    #图像总数
     total_frames=imgs.shape[0]
     frame_cnt=0
     while frame_cnt<total_frames:
@@ -194,10 +193,10 @@ def YOLO(imgs):
         #print(response.as_numpy('output').shape)
     return torch.from_numpy(np.concatenate(ans, axis=0))
 
-#对YOLO返回结果进行后处理
-#输入0：prediction [batch,22743]
-#输入1：ori_imgs []
-#输出: ori_imgs,boxes,inps [batch,3,256,192]
+# Post processing for the outputs of YOLO
+# input0：prediction [batch,22743]
+# intput1：ori_imgs []
+# output: ori_imgs,boxes,inps [batch,3,256,192]
 def preProcessForFastPose(prediction,orig_imgs,im_dim_list):
     new_orig_imgs=[]
     all_boxes=[]
@@ -267,9 +266,9 @@ def preProcessForFastPose(prediction,orig_imgs,im_dim_list):
         new_pt2.append(pt2)
     return np.concatenate(final_inps,axis=0),new_boxes,new_scores,new_pt1,new_pt2
 
-# 二维姿态估计
-# 输入：[batch,3,320,256]
-#输出：heatmap [batch,17,80,64]
+# Send requests to Triton for FastPose inference (2D pose estimation)
+# input：[batch,3,320,256]
+# output：heatmap [batch,17,80,64]
 def FastPose(inpses):
     try:
         # Create gRPC client for communicating with the server
@@ -288,7 +287,6 @@ def FastPose(inpses):
     sent_count = 0
     max_batch_size=1
 
-    #总数
     total_frames=inpses.shape[0]
     frame_cnt=0
     while frame_cnt<total_frames:
@@ -326,7 +324,7 @@ def FastPose(inpses):
     hms=torch.from_numpy(hms).narrow(1,0,17)
     return hms.numpy()
 
-#输出：[total_frames,17,2]
+# Post processing for the outputs of FastPose：[total_frames,17,2]
 def preProcessForVideoPose3D(hms,all_boxes,all_scores,all_pt1,all_pt2,orig_imgs):
     final_result=[]
     for i in range(hms.shape[0]):
