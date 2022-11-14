@@ -1,4 +1,5 @@
 ## Introduction
+(Please download and read the file 'introduction to project.pdf' for technical details of this project.)
 This project gives a solution for an AI-based cloud service, which aims to automatize the production of character animation.
 
 Generally, the project is consisted of three parts :
@@ -11,8 +12,6 @@ Generally, the project is consisted of three parts :
 3. Request Handler
    - communicate with Unity client and Triton
    - data processing
-<br/>
-Please download and read the file 'introduction to project.pdf' for technical details of this project.
 ## Use case
 Two functionalities are involved : 
 - Generate a BVH file<br/>For an input video, a BVH file will be generated which could be directly used in animation editors(e.g., Blender).
