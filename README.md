@@ -1,5 +1,5 @@
 ## Introduction
-The project gives a solution for an AI-based cloud service, which aims to automatize the production of character animation.
+This project gives a solution for an AI-based cloud service, which aims to automatize the production of character animation.
 
 Generally, the project is consisted of three parts :
 1. Unity client
