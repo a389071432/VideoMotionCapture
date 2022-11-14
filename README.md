@@ -11,6 +11,7 @@ Generally, the project is consisted of three parts :
 3. Request Handler
    - communicate with Unity client and Triton
    - data processing
+<br/>
 Please download and read the file 'introduction to project.pdf' for technical details of this project.
 ## Use case
 Two functionalities are involved : 
